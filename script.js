@@ -5,8 +5,8 @@ const price = 999;
 const canvas = document.getElementById("slider");
 const ct = canvas.getContext("2d");
 
-let minPos = [15, 30];
-let maxPos = [285, 30];
+let minPos = [15, 50];
+let maxPos = [285, 50];
 const rad = 8;
 
 let dragged = undefined;
@@ -24,13 +24,23 @@ const dragRange = (x, y) => {
   if (x < 290 && x > 10) {
     if (draggedSide === "max" && x > minPos[0] + 20) {
       dragged[0] = x;
-      dragged[1] = y;
+      dragged[1] = limitY(y);
     }
     if (draggedSide === "min" && x < maxPos[0] - 20) {
       dragged[0] = x;
-      dragged[1] = y;
+      dragged[1] = limitY(y);
     }
   }
+};
+
+const limitY = (y) => {
+  if (y < 20) {
+    return 20;
+  }
+  if (y > 80) {
+    return 80;
+  }
+  return y;
 };
 
 const slide = (e) => {
@@ -44,7 +54,7 @@ const slide = (e) => {
   minField.innerText = `$${Math.floor((1000 * minPos[0]) / 300)}`;
   maxField.innerText = `$${Math.floor((1000 * maxPos[0]) / 300)}`;
 
-  ct.clearRect(0, 0, 300, 60);
+  ct.clearRect(0, 0, 300, 100);
   drawLineLeft();
   drawLineRight();
   drawLineCenter();
@@ -82,8 +92,8 @@ const drawLine = (start, control1, control2, end, color) => {
 
 const drawLineLeft = () => {
   drawLine(
-    { x: 0, y: 30 },
-    { x: minPos[0] / 3, y: 30 },
+    { x: 0, y: 50 },
+    { x: minPos[0] / 3, y: 50 },
     { x: (2 * minPos[0]) / 3, y: minPos[1] },
     { x: minPos[0], y: minPos[1] },
     "gray"
@@ -93,8 +103,8 @@ const drawLineLeft = () => {
 const drawLineRight = () => {
   const fromLeft = 300 - maxPos[0];
   drawLine(
-    { x: 300, y: 30 },
-    { x: 300 - fromLeft / 3, y: 30 },
+    { x: 300, y: 50 },
+    { x: 300 - fromLeft / 3, y: 50 },
     { x: 300 - (2 * fromLeft) / 3, y: maxPos[1] },
     { x: 300 - fromLeft, y: maxPos[1] },
     "gray"
@@ -106,7 +116,7 @@ const drawLineCenter = () => {
   drawLine(
     { x: minPos[0], y: minPos[1] },
     { x: minPos[0] + fromMin / 3, y: minPos[1] },
-    { x: (2 * (minPos[0] + fromMin)) / 3, y: maxPos[1] },
+    { x: minPos[0] + (2 * fromMin) / 3, y: maxPos[1] },
     { x: maxPos[0], y: maxPos[1] },
     "#63a2ff"
   );
@@ -114,9 +124,9 @@ const drawLineCenter = () => {
 
 const returnToCenter = (slider) => {
   const interval = setInterval(() => {
-    if (slider[1] > 30) slider[1]--;
-    if (slider[1] < 30) slider[1]++;
-    if (slider[1] === 30) clearInterval(interval);
+    if (slider[1] > 50) slider[1]--;
+    if (slider[1] < 50) slider[1]++;
+    if (slider[1] === 50) clearInterval(interval);
     slide();
   }, 1000 / 60);
 };
@@ -134,7 +144,7 @@ canvas.addEventListener("mousedown", (e) => {
   }
 });
 document.addEventListener("mouseup", (e) => {
-  if (dragged[1] !== 30) returnToCenter(dragged);
+  if (dragged[1] !== 50) returnToCenter(dragged);
 
   dragged = undefined;
   draggedSide = undefined;
