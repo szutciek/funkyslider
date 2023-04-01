@@ -38,13 +38,7 @@ const dragRange = (x, y) => {
 };
 
 const limitY = (y) => {
-  if (y < 20) {
-    return 20;
-  }
-  if (y > 80) {
-    return 80;
-  }
-  return y;
+  return 50 + (Math.sign(y - 50) * Math.abs(50 - y) * 2) / 3;
 };
 
 const slide = (e) => {
