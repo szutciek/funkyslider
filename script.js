@@ -11,6 +11,10 @@ const rad = 8;
 
 let dragged = undefined;
 
+const lerp = (s, e, t) => {
+  return (1 - t) * s + t * e;
+};
+
 const checkOverlap = ([posX, posY], [tarX, tarY, rad]) => {
   if (posX >= tarX - rad && posX <= tarX + rad) {
     if (posY >= tarY - rad && posY <= tarY + rad) {
@@ -124,8 +128,8 @@ const drawLineCenter = () => {
 
 const returnToCenter = (slider) => {
   const interval = setInterval(() => {
-    if (slider[1] > 50) slider[1]--;
-    if (slider[1] < 50) slider[1]++;
+    if (slider[1] > 50) slider[1] = lerp(slider[1], 50, 0.15);
+    if (slider[1] < 50) slider[1] = lerp(slider[1], 50, 0.15);
     if (slider[1] === 50) clearInterval(interval);
     slide();
   }, 1000 / 60);
